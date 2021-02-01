@@ -30,10 +30,6 @@ defmodule Cexc do
       end
   """
 
-  # From JV: https://github.com/elixir-lang/elixir/issues/2665
-  @compile :native
- # @compile {:hipe, [:verbose, :o3]}
-
   use Bitwise
 
   defmacro __using__(crc_def) do
