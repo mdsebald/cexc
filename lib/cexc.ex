@@ -167,7 +167,7 @@ defmodule Cexc do
   defp name_to_config("CRC8_ICODE"), do: {8, 0x1D, 0xFD, 0x00, false}
   defp name_to_config("CRC8_ITU"), do: {8, 0x07, 0x00, 0x55, false}
   defp name_to_config("CRC8_MAXIM"), do: {8, 0x31, 0x00, 0x00, true}
-  defp name_to_config("CRC8_SENSITRON"), do: {8, 0x31, 0xFF, 0x00, false}
+  defp name_to_config("CRC8_SENSIRION"), do: {8, 0x31, 0xFF, 0x00, false}
   defp name_to_config("CRC8_ROHC"), do: {8, 0x07, 0xFF, 0x00, true}
   defp name_to_config("CRC8_WCDMA"), do: {8, 0x9B, 0x00, 0x00, true}
   defp name_to_config("CRC16_CCITT_ZERO"), do: {16, 0x1021, 0x0000, 0x0000, false}

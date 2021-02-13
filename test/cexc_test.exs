@@ -11,6 +11,11 @@ defmodule CexcTest do
     assert Cexc.calc_crc('123456789', crc_defn) == 0xD0
   end
 
+  test "8-bit Sensirion CRC" do
+    crc_defn = Cexc.init("CRC8_SENSIRION")
+    assert Cexc.calc_crc([0xBE, 0xEF], crc_defn) == 0x92
+  end
+
   test "16-bit un-reflected generate CRC" do
     crc_defn = Cexc.init("CRC16_AUG_CCITT")
     assert Cexc.calc_crc('123456789', crc_defn) == 0xE5CC
