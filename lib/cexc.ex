@@ -2,7 +2,7 @@ defmodule Cexc do
   use Bitwise
 
   @moduledoc """
-    Create custom configured CRC calculation functions
+    Generate custom configured, Cyclic Redundancy Check (CRC) calculation functions
   """
 
   defstruct [:bits, :reducer, :init_value, :final_xor_value]
@@ -20,7 +20,7 @@ defmodule Cexc do
 
     Example: ```
       # Use a preconfigured CRC algorithm
-      crc16 = Cexc.init("CRC16_AUG_CCITT")
+      crc16 = Cexc.init(:crc16_aug_ccitt)
 
       # Generate a CRC for a list of bytes
       0xE5CC = Cexc.calc_crc('123456789', crc16)
@@ -36,8 +36,8 @@ defmodule Cexc do
       Cexc.calc_crc([0x31,0x32,0x33,0x34,0x35,0x36,0x37,0x38,0x39,0x13,0x0F], custom_crc) == 0
     ```
   """
-  @spec init(String.t() | tuple()) :: t()
-  def init(crc_def) when is_binary(crc_def) do
+  @spec init(atom() | tuple()) :: t()
+  def init(crc_def) when is_atom(crc_def) do
     init(name_to_config(crc_def))
   end
 
@@ -88,7 +88,6 @@ defmodule Cexc do
 
   @doc """
     Calculates the CRC of the list of data bytes
-
   """
   @spec calc_crc(list(), Cexc6.t()) :: non_neg_integer()
   def calc_crc(data, %__MODULE__{} = info) when is_list(data) do
@@ -156,62 +155,62 @@ defmodule Cexc do
   end
 
   # Convert CRC name to config parameters
-  defp name_to_config("CRC8"), do: {8, 0x07, 0x00, 0x00, false}
-  defp name_to_config("CRC8_SAE_J1850"), do: {8, 0x1D, 0xFF, 0xFF, false}
-  defp name_to_config("CRC8_SAE_J1850_ZERO"), do: {8, 0x1D, 0x00, 0x00, false}
-  defp name_to_config("CRC8_8H2F"), do: {8, 0x2F, 0xFF, 0xFF, false}
-  defp name_to_config("CRC8_CDMA2000"), do: {8, 0x9B, 0xFF, 0x00, false}
-  defp name_to_config("CRC8_DARC"), do: {8, 0x39, 0x00, 0x00, true}
-  defp name_to_config("CRC8_DVB_S2"), do: {8, 0xD5, 0x00, 0x00, false}
-  defp name_to_config("CRC8_EBU"), do: {8, 0x1D, 0xFF, 0x00, true}
-  defp name_to_config("CRC8_ICODE"), do: {8, 0x1D, 0xFD, 0x00, false}
-  defp name_to_config("CRC8_ITU"), do: {8, 0x07, 0x00, 0x55, false}
-  defp name_to_config("CRC8_MAXIM"), do: {8, 0x31, 0x00, 0x00, true}
-  defp name_to_config("CRC8_SENSIRION"), do: {8, 0x31, 0xFF, 0x00, false}
-  defp name_to_config("CRC8_ROHC"), do: {8, 0x07, 0xFF, 0x00, true}
-  defp name_to_config("CRC8_WCDMA"), do: {8, 0x9B, 0x00, 0x00, true}
-  defp name_to_config("CRC16_CCITT_ZERO"), do: {16, 0x1021, 0x0000, 0x0000, false}
-  defp name_to_config("CRC16_ARC"), do: {16, 0x8005, 0x0000, 0x0000, true}
-  defp name_to_config("CRC16_AUG_CCITT"), do: {16, 0x1021, 0x1D0F, 0x0000, false}
-  defp name_to_config("CRC16_BUYPASS"), do: {16, 0x8005, 0x0000, 0x0000, false}
-  defp name_to_config("CRC16_CCITT_FALSE"), do: {16, 0x1021, 0xFFFF, 0x0000, false}
-  defp name_to_config("CRC16_CDMA2000"), do: {16, 0xC867, 0xFFFF, 0x0000, false}
-  defp name_to_config("CRC16_DDS_110"), do: {16, 0x8005, 0x800D, 0x0000, false}
-  defp name_to_config("CRC16_DECT_R"), do: {16, 0x0589, 0x0000, 0x0001, false}
-  defp name_to_config("CRC16_DECT_X"), do: {16, 0x0589, 0x0000, 0x0000, false}
-  defp name_to_config("CRC16_DNP"), do: {16, 0x3D65, 0x0000, 0xFFFF, true}
-  defp name_to_config("CRC16_EN_13757"), do: {16, 0x3D65, 0x0000, 0xFFFF, false}
-  defp name_to_config("CRC16_GENIBUS"), do: {16, 0x1021, 0xFFFF, 0xFFFF, false}
-  defp name_to_config("CRC16_MAXIM"), do: {16, 0x8005, 0x0000, 0xFFFF, true}
-  defp name_to_config("CRC16_MCRF4XX"), do: {16, 0x1021, 0xFFFF, 0x0000, true}
-  defp name_to_config("CRC16_RIELLO"), do: {16, 0x1021, 0xB2AA, 0x0000, true}
-  defp name_to_config("CRC16_T10_DIF"), do: {16, 0x8BB7, 0x0000, 0x0000, false}
-  defp name_to_config("CRC16_TELEDISK"), do: {16, 0xA097, 0x0000, 0x0000, false}
-  defp name_to_config("CRC16_TMS37157"), do: {16, 0x1021, 0x89EC, 0x0000, true}
-  defp name_to_config("CRC16_USB"), do: {16, 0x8005, 0xFFFF, 0xFFFF, true}
-  defp name_to_config("CRC16_A"), do: {16, 0x1021, 0xC6C6, 0x0000, true}
-  defp name_to_config("CRC16_KERMIT"), do: {16, 0x1021, 0x0000, 0x0000, true}
-  defp name_to_config("CRC16_MODBUS"), do: {16, 0x8005, 0xFFFF, 0x0000, true}
-  defp name_to_config("CRC16_X_25"), do: {16, 0x1021, 0xFFFF, 0xFFFF, true}
-  defp name_to_config("CRC16_XMODEM"), do: {16, 0x1021, 0x0000, 0x0000, false}
-  defp name_to_config("CRC32"), do: {32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true}
-  defp name_to_config("CRC32_BZIP2"), do: {32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, false}
-  defp name_to_config("CRC32_C"), do: {32, 0x1EDC6F41, 0xFFFFFFFF, 0xFFFFFFFF, true}
-  defp name_to_config("CRC32_D"), do: {32, 0xA833982B, 0xFFFFFFFF, 0xFFFFFFFF, true}
-  defp name_to_config("CRC32_MPEG2"), do: {32, 0x04C11DB7, 0xFFFFFFFF, 0x00000000, false}
-  defp name_to_config("CRC32_POSIX"), do: {32, 0x04C11DB7, 0x00000000, 0xFFFFFFFF, false}
-  defp name_to_config("CRC32_Q"), do: {32, 0x814141AB, 0x00000000, 0x00000000, false}
-  defp name_to_config("CRC32_JAMCRC"), do: {32, 0x04C11DB7, 0xFFFFFFFF, 0x00000000, true}
-  defp name_to_config("CRC32_XFER"), do: {32, 0x000000AF, 0x00000000, 0x00000000, false}
-  defp name_to_config("CRC64_ECMA_182"), do: {64, 0x42F0E1EBA9EA3693, 0x0, 0x0, false}
+  defp name_to_config(:crc8), do: {8, 0x07, 0x00, 0x00, false}
+  defp name_to_config(:crc8_sae_j1850), do: {8, 0x1D, 0xFF, 0xFF, false}
+  defp name_to_config(:crc8_sae_j1850_zero), do: {8, 0x1D, 0x00, 0x00, false}
+  defp name_to_config(:crc8_8h2f), do: {8, 0x2F, 0xFF, 0xFF, false}
+  defp name_to_config(:crc8_cdma2000), do: {8, 0x9B, 0xFF, 0x00, false}
+  defp name_to_config(:crc8_darc), do: {8, 0x39, 0x00, 0x00, true}
+  defp name_to_config(:crc8_dvb_s2), do: {8, 0xD5, 0x00, 0x00, false}
+  defp name_to_config(:crc8_ebu), do: {8, 0x1D, 0xFF, 0x00, true}
+  defp name_to_config(:crc8_icode), do: {8, 0x1D, 0xFD, 0x00, false}
+  defp name_to_config(:crc8_itu), do: {8, 0x07, 0x00, 0x55, false}
+  defp name_to_config(:crc8_maxim), do: {8, 0x31, 0x00, 0x00, true}
+  defp name_to_config(:crc8_sensirion), do: {8, 0x31, 0xFF, 0x00, false}
+  defp name_to_config(:crc8_rohc), do: {8, 0x07, 0xFF, 0x00, true}
+  defp name_to_config(:crc8_wcdma), do: {8, 0x9B, 0x00, 0x00, true}
+  defp name_to_config(:crc16_ccitt_zero), do: {16, 0x1021, 0x0000, 0x0000, false}
+  defp name_to_config(:crc16_arc), do: {16, 0x8005, 0x0000, 0x0000, true}
+  defp name_to_config(:crc16_aug_ccitt), do: {16, 0x1021, 0x1D0F, 0x0000, false}
+  defp name_to_config(:crc16_buypass), do: {16, 0x8005, 0x0000, 0x0000, false}
+  defp name_to_config(:crc16_ccitt_false), do: {16, 0x1021, 0xFFFF, 0x0000, false}
+  defp name_to_config(:crc16_cdma2000), do: {16, 0xC867, 0xFFFF, 0x0000, false}
+  defp name_to_config(:crc16_dds_110), do: {16, 0x8005, 0x800D, 0x0000, false}
+  defp name_to_config(:crc16_dect_r), do: {16, 0x0589, 0x0000, 0x0001, false}
+  defp name_to_config(:crc16_dect_x), do: {16, 0x0589, 0x0000, 0x0000, false}
+  defp name_to_config(:crc16_dnp), do: {16, 0x3D65, 0x0000, 0xFFFF, true}
+  defp name_to_config(:crc16_en_13757), do: {16, 0x3D65, 0x0000, 0xFFFF, false}
+  defp name_to_config(:crc16_genibus), do: {16, 0x1021, 0xFFFF, 0xFFFF, false}
+  defp name_to_config(:crc16_maxim), do: {16, 0x8005, 0x0000, 0xFFFF, true}
+  defp name_to_config(:crc16_mcrf4xx), do: {16, 0x1021, 0xFFFF, 0x0000, true}
+  defp name_to_config(:crc16_riello), do: {16, 0x1021, 0xB2AA, 0x0000, true}
+  defp name_to_config(:crc16_t10_dif), do: {16, 0x8BB7, 0x0000, 0x0000, false}
+  defp name_to_config(:crc16_teledisk), do: {16, 0xA097, 0x0000, 0x0000, false}
+  defp name_to_config(:crc16_tms37157), do: {16, 0x1021, 0x89EC, 0x0000, true}
+  defp name_to_config(:crc16_usb), do: {16, 0x8005, 0xFFFF, 0xFFFF, true}
+  defp name_to_config(:crc16_a), do: {16, 0x1021, 0xC6C6, 0x0000, true}
+  defp name_to_config(:crc16_kermit), do: {16, 0x1021, 0x0000, 0x0000, true}
+  defp name_to_config(:crc16_modbus), do: {16, 0x8005, 0xFFFF, 0x0000, true}
+  defp name_to_config(:crc16_x_25), do: {16, 0x1021, 0xFFFF, 0xFFFF, true}
+  defp name_to_config(:crc16_xmodem), do: {16, 0x1021, 0x0000, 0x0000, false}
+  defp name_to_config(:crc32), do: {32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, true}
+  defp name_to_config(:crc32_bzip2), do: {32, 0x04C11DB7, 0xFFFFFFFF, 0xFFFFFFFF, false}
+  defp name_to_config(:crc32_c), do: {32, 0x1EDC6F41, 0xFFFFFFFF, 0xFFFFFFFF, true}
+  defp name_to_config(:crc32_d), do: {32, 0xA833982B, 0xFFFFFFFF, 0xFFFFFFFF, true}
+  defp name_to_config(:crc32_mpeg2), do: {32, 0x04C11DB7, 0xFFFFFFFF, 0x00000000, false}
+  defp name_to_config(:crc32_posix), do: {32, 0x04C11DB7, 0x00000000, 0xFFFFFFFF, false}
+  defp name_to_config(:crc32_q), do: {32, 0x814141AB, 0x00000000, 0x00000000, false}
+  defp name_to_config(:crc32_jamcrc), do: {32, 0x04C11DB7, 0xFFFFFFFF, 0x00000000, true}
+  defp name_to_config(:crc32_xfer), do: {32, 0x000000AF, 0x00000000, 0x00000000, false}
+  defp name_to_config(:crc64_ecma_182), do: {64, 0x42F0E1EBA9EA3693, 0x0, 0x0, false}
 
-  defp name_to_config("CRC64_GO_ISO"),
+  defp name_to_config(:crc64_go_iso),
     do: {64, 0x000000000000001B, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, true}
 
-  defp name_to_config("CRC64_WE"),
+  defp name_to_config(:crc64_we),
     do: {64, 0x42F0E1EBA9EA3693, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, false}
 
-  defp name_to_config("CRC64_XZ"),
+  defp name_to_config(:crc64_xz),
     do: {64, 0x42F0E1EBA9EA3693, 0xFFFFFFFFFFFFFFFF, 0xFFFFFFFFFFFFFFFF, true}
 
   #
