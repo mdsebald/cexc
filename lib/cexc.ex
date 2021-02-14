@@ -87,9 +87,13 @@ defmodule Cexc do
   end
 
   @doc """
-    Calculates the CRC of the list of data bytes
+    Calculates the CRC of a binary or list of data bytes
   """
-  @spec calc_crc(list(), Cexc6.t()) :: non_neg_integer()
+  @spec calc_crc(binary() | list(), Cexc.t()) :: non_neg_integer()
+  def calc_crc(data, %__MODULE__{} = info) when is_binary(data) do
+    calc_crc(:erlang.binary_to_list(data), info)
+  end
+
   def calc_crc(data, %__MODULE__{} = info) when is_list(data) do
     data
     |> Enum.reduce(info.init_value, info.reducer)

@@ -55,6 +55,11 @@ defmodule CexcTest do
     assert Cexc.calc_crc('123456789', crc_defn) == 0xB90956C775A41001
   end
 
+  test "binary to list conversion" do
+    crc_defn = Cexc.init(:crc64_go_iso)
+    assert Cexc.calc_crc("123456789", crc_defn) == 0xB90956C775A41001
+  end
+
   test "16-bit random reflected generate CRC" do
     crc_defn = Cexc.init({16, 0x1234, 0, 0, true})
     assert Cexc.calc_crc('123456789', crc_defn) == 0xF13
