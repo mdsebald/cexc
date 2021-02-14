@@ -91,7 +91,8 @@ defmodule Cexc do
   """
   @spec calc_crc(binary() | list(), Cexc.t()) :: non_neg_integer()
   def calc_crc(data, %__MODULE__{} = info) when is_binary(data) do
-    calc_crc(:erlang.binary_to_list(data), info)
+    :erlang.binary_to_list(data)
+    |> calc_crc(info)
   end
 
   def calc_crc(data, %__MODULE__{} = info) when is_list(data) do
